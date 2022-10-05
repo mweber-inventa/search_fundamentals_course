@@ -100,8 +100,16 @@ def get_opensearch():
 
     return client
 
+def format_doc_key(field):
+    if type(field) == 'list':
+        if len(field) == 0:
+            return None
+        elif len(field) == 1:
+            return field[0]
+        else:
+            return field
 
-def index_file(file, index_name):
+def index_file(file, index_name, bulk_chunk_size=2000):
     docs_indexed = 0
     client = get_opensearch()
     logger.info(f'Processing file : {file}')
@@ -119,8 +127,24 @@ def index_file(file, index_name):
         if 'productId' not in doc or len(doc['productId']) == 0:
             continue
         #### Step 2.b: Create a valid OpenSearch Doc and bulk index 2000 docs at a time
-        the_doc = None
+        the_doc = {
+            '_op_type': 'index',
+            '_index': index_name,
+            '_type': 'document',
+            '_id': format_doc_key(doc['sku']),
+            '_source': { k:format_doc_key(v) for (k,v) in doc.items() }
+        }
+        #print(the_doc)
         docs.append(the_doc)
+
+        if len(docs)==bulk_chunk_size:
+            bulk(client = client, actions = docs)
+            docs_indexed = docs_indexed + bulk_chunk_size
+            docs = []
+    
+    if len(docs)>0:
+        bulk(client = client, actions = docs)
+        docs_indexed = docs_indexed + len(docs)
 
     return docs_indexed
 
