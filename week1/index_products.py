@@ -101,13 +101,16 @@ def get_opensearch():
     return client
 
 def format_doc_key(field):
-    if type(field) == 'list':
+
+    if isinstance(field, list):
         if len(field) == 0:
             return None
         elif len(field) == 1:
             return field[0]
         else:
             return field
+    else:
+        return field
 
 def index_file(file, index_name, bulk_chunk_size=2000):
     docs_indexed = 0
@@ -134,6 +137,7 @@ def index_file(file, index_name, bulk_chunk_size=2000):
             '_id': format_doc_key(doc['sku']),
             '_source': { k:format_doc_key(v) for (k,v) in doc.items() }
         }
+        
         #print(the_doc)
         docs.append(the_doc)
 
