@@ -94,7 +94,7 @@ def query():
     print("query obj: {}".format(query_obj))
 
     #### Step 4.b.ii
-    response = None   # TODO: Replace me with an appropriate call to OpenSearch
+    response = opensearch.search(index="bbuy_products", body=query_obj)
     # Postprocess results here if you so desire
 
     #print(response)
@@ -122,19 +122,19 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             "regularPrice_ranges":{
                 "range": {
                     "field": "regularPrice",
-                    "keyed": true,
+                    "keyed": True,
                     "ranges": [
-                        { "to": 100 },
-                        { "from": 100, "to": 200 },
-                        { "from": 200 }
+                        { "to": 40 },
+                        { "from": 40, "to": 80 },
+                        { "from": 80 }
                     ]
                 }
             },
             "department_term": {
-                "terms": { "field": "department" }
+                "terms": { "field": "department.keyword" }
             },
             "products_without_an_image": {
-                "missing": { "field": "image" }
+                "missing": { "field": "image.keyword" }
             }
         },
         "highlight": {
@@ -145,8 +145,9 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             }
         },
         "sort":[
-            {"regularPrice": {"order": "desc"}},
-            {"name.keyword"}
+            {"regularPrice": {"order": sortDir}},
+            {"name.keyword": {"order": sortDir}},
+            sort
         ]
     }
     return query_obj
