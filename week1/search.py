@@ -119,7 +119,23 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
         },
         "aggs": {
             #### Step 4.b.i: create the appropriate query and aggregations here
-
+            "regularPrice_ranges":{
+                "range": {
+                    "field": "regularPrice",
+                    "keyed": true,
+                    "ranges": [
+                        { "to": 100 },
+                        { "from": 100, "to": 200 },
+                        { "from": 200 }
+                    ]
+                }
+            },
+            "department_term": {
+                "terms": { "field": "department" }
+            },
+            "products_without_an_image": {
+                "missing": { "field": "image" }
+            }
         }
     }
     return query_obj
