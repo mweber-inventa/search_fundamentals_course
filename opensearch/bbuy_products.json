@@ -212,7 +212,13 @@
         }
       },
       "modelNumber" : {
-        "type" : "long"
+        "type" : "text",
+        "fields" : {
+          "keyword" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          }
+        }
       },
       "name" : {
         "type" : "text",
@@ -230,7 +236,7 @@
         "type" : "boolean"
       },
       "productId" : {
-        "type" : "integer"
+        "type" : "long"
       },
       "quantityLimit" : {
         "type" : "integer"
