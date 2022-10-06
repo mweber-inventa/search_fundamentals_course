@@ -136,6 +136,17 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             "products_without_an_image": {
                 "missing": { "field": "image" }
             }
-        }
+        },
+        "highlight": {
+            "fields": {
+                "name": {}, 
+                "shortDescription": {}, 
+                "longDescription": {}
+            }
+        },
+        "sort":[
+            {"regularPrice": {"order": "desc"}},
+            {"name.keyword"}
+        ]
     }
     return query_obj
