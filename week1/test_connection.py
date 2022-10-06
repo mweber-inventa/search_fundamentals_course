@@ -32,3 +32,7 @@ def get_opensearch():
 
     return client
 
+
+
+# English analyzer:
+# https://www.elastic.co/guide/en/elasticsearch/reference/7.10/analysis-lang-analyzer.html#english-analyzer

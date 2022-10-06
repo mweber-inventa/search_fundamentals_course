@@ -191,7 +191,8 @@
             "type" : "keyword",
             "ignore_above" : 256
           }
-        }
+        },
+        "analyzer": "english"
       },
       "longDescriptionHtml" : {
         "type" : "text",
@@ -227,7 +228,8 @@
             "type" : "keyword",
             "ignore_above" : 256
           }
-        }
+        },
+        "analyzer": "english"
       },
       "onSale" : {
         "type" : "boolean"
@@ -299,7 +301,8 @@
             "type" : "keyword",
             "ignore_above" : 256
           }
-        }
+        },
+        "analyzer": "english"
       },
       "shortDescriptionHtml" : {
         "type" : "text",
