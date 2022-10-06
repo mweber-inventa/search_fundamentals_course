@@ -114,7 +114,8 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             "query_string": {
                 "fields": ['name', 'shortDescription', 'longDescription'],
                 "query": user_query,
-                "phrase_slop": 3
+                "phrase_slop": 3,
+                "filter": filters
             }
         },
         "aggs": {
