@@ -127,10 +127,10 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
         },
         "aggs": {
             #### Step 4.b.i: create the appropriate query and aggregations here
-            "regularPrice_ranges":{
+            "regularPrice":{
                 "range": {
                     "field": "regularPrice",
-                    "keyed": True,
+                    "keyed": False,
                     "ranges": [
                         { "to": 40 },
                         { "from": 40, "to": 80 },
@@ -138,7 +138,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     ]
                 }
             },
-            "department_term": {
+            "department": {
                 "terms": { "field": "department.keyword" }
             },
             "products_without_an_image": {
