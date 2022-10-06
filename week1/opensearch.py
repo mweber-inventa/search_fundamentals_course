@@ -10,7 +10,6 @@ def get_opensearch():
         port = 9200
         auth = ('admin', 'admin')
         
-        #### Step 2.a: Create a connection to OpenSearch
         g.opensearch = OpenSearch(
             hosts=[{'host': host, 'port': port}],
             http_compress=True,  # enables gzip compression for request bodies
