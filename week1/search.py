@@ -131,7 +131,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "salesRankShortTerm",
-                            "factor": 1.2,
+                            "factor": 100,
                             "modifier": "reciprocal",
                             "missing": 100000000
                         }
@@ -139,7 +139,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "salesRankMediumTerm",
-                            "factor": 1.5,
+                            "factor": 80,
                             "modifier": "reciprocal",
                             "missing": 100000000
                         }
@@ -147,7 +147,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "salesRankLongTerm",
-                            "factor": 1,
+                            "factor": 80,
                             "modifier": "reciprocal",
                             "missing": 100000000
                         }
@@ -155,9 +155,25 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "bestSellingRank",
-                            "factor": 3,
+                            "factor": 80,
                             "modifier": "reciprocal",
                             "missing": 100000000
+                        }
+                    },
+                    {
+                        "field_value_factor": {
+                            "field": "customerReviewAverage",
+                            "factor": 0.0002,
+                            "modifier": "none",
+                            "missing": 0
+                        }
+                    },
+                    {
+                        "field_value_factor": {
+                            "field": "customerReviewCount",
+                            "factor": 0.000001,
+                            "modifier": "none",
+                            "missing": 0
                         }
                     }
                 ]

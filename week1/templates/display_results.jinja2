@@ -5,7 +5,7 @@
       <div class="col-span-3">
         {% if hit._source.image %}
           <div class="p-2">
-            <img src="{{ hit._source.image }}" alt="{{ hit._source.name }}" class="mx-auto h-40 object-fit" />
+            <img src="{{ hit._source.image }}" alt="{{ hit._source.name[0] }}" class="mx-auto h-40 object-fit" />
           </div>
         {% endif %}
       </div>
@@ -13,10 +13,10 @@
         <div class="sm:grid grid-cols-12">
         <div class="col-span-9">
         <div class="search-result-name text-md text-zinc-600">{#do we have a highlight?#}
-          {% if hit.highlight and hit.highlight.name %}
-            {{ hit.highlight.name }}
+          {% if hit.highlight and hit.highlight.name[0] %}
+            {{ hit.highlight.name[0] }}
           {% else%}
-            {{ hit._source.name }}
+            {{ hit._source.name[0] }}
           {% endif %}
         </div>
           <div class="py-2"><span class="search-result-header">ID</span>: {{ hit._source.productId }}</div>
@@ -24,13 +24,13 @@
             {% if hit._source.longDescription %}
               {#do we have a highlight?#}
               {% if hit.highlight and hit.highlight.longDescription %}
-                {{ hit.highlight.longDescription }}
+                {{ hit.highlight.longDescription[0] }}
               {% else %}
-                {{ hit._source.longDescription }}
+                {{ hit._source.longDescription[0] }}
               {% endif %}
-            {% elif hit._source.shortDescription %}
+            {% elif hit._source.shortDescription[0] %}
               {#do we have a highlight?#}
-              {% if hit.highlight and hit.highlight.shortDescription %}
+              {% if hit.highlight and hit.highlight.shortDescription[0] %}
                 {{ hit.highlight.shortDescription }}
               {% else %}
                 {{ hit._source.shortDescription }}
