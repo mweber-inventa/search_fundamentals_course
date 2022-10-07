@@ -111,19 +111,17 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
     query_obj = {
         'size': 10,
         "query": {
-
             "bool": {
-                "must":[
+                "should":[
                     {"query_string": {
-                        "fields": ['name', 'shortDescription', 'longDescription'],
+                        #"fields": ['name', 'shortDescription', 'longDescription'], # Level 1
+                        "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"], # Level 2
                         "query": user_query,
                         "phrase_slop": 3
                     }}
                 ],
                 "filter": filters
             }
-
-            
         },
         "aggs": {
             #### Step 4.b.i: create the appropriate query and aggregations here
@@ -132,9 +130,11 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     "field": "regularPrice",
                     "keyed": False,
                     "ranges": [
-                        { "to": 40 },
-                        { "from": 40, "to": 80 },
-                        { "from": 80 }
+                        { "key": "$", "to": 20 },
+                        { "key": "$$", "from": 20, "to": 40 },
+                        { "key": "$$$", "from": 40, "to": 60 },
+                        { "key": "$$$$", "from": 60, "to": 80 },
+                        { "key": "$$$$$", "from": 80 }
                     ]
                 }
             },
@@ -153,8 +153,6 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             }
         },
         "sort":[
-            {"regularPrice": {"order": sortDir}},
-            {"name.keyword": {"order": sortDir}},
             sort
         ]
     }
