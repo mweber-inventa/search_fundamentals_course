@@ -111,16 +111,49 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
     query_obj = {
         'size': 10,
         "query": {
-            "bool": {
-                "should":[
-                    {"query_string": {
-                        #"fields": ['name', 'shortDescription', 'longDescription'], # Level 1
-                        "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"], # Level 2
-                        "query": user_query,
-                        "phrase_slop": 3
-                    }}
-                ],
-                "filter": filters
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "must":[
+                            {"query_string": {
+                                #"fields": ['name', 'shortDescription', 'longDescription'], # Level 1
+                                "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"], # Level 2
+                                "query": user_query,
+                                "phrase_slop": 3
+                            }}
+                        ],
+                        "filter": filters
+                    }
+                },
+                "boost_mode": "multiply",
+                "score_mode": "avg",
+                "functions": [
+                    {
+                        "field_value_factor": {
+                            "field": "salesRankShortTerm",
+                            "factor": 1.5,
+                            "modifier": "reciprocal",
+                            "missing": 100000000
+                        }
+                    },
+                    {
+                        "field_value_factor": {
+                            "field": "salesRankMidTerm",
+                            "factor": 1.5,
+                            "modifier": "reciprocal",
+                            "missing": 100000000
+                        }
+                    },
+                    {
+                        "field_value_factor": {
+                            "field": "salesRankLongTerm",
+                            "factor": 1.5,
+                            "modifier": "reciprocal",
+                            "missing": 100000000
+                        }
+                    }
+                ]
+                
             }
         },
         "aggs": {
@@ -141,7 +174,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             "department": {
                 "terms": { "field": "department.keyword" }
             },
-            "missing_image": {
+            "missing_images": {
                 "missing": { "field": "image.keyword" }
             }
         },
