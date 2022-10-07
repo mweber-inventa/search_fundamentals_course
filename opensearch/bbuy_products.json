@@ -29,13 +29,7 @@
         "type" : "integer"
       },
       "bestSellingRank" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "integer"
       },
       "categoryLeaf" : {
         "type" : "text",
@@ -98,22 +92,10 @@
         }
       },
       "customerReviewAverage" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "float"
       },
       "customerReviewCount" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "integer"
       },
       "department" : {
         "type" : "text",
@@ -189,7 +171,7 @@
         "fields" : {
           "keyword" : {
             "type" : "keyword",
-            "ignore_above" : 256
+            "ignore_above" : 1024
           }
         },
         "analyzer": "english"
@@ -226,7 +208,7 @@
         "fields" : {
           "keyword" : {
             "type" : "keyword",
-            "ignore_above" : 256
+            "ignore_above" : 128
           }
         },
         "analyzer": "english"
@@ -262,31 +244,13 @@
         "type" : "float"
       },
       "salesRankLongTerm" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "integer"
       },
       "salesRankMediumTerm" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "integer"
       },
       "salesRankShortTerm" : {
-        "type" : "text",
-        "fields" : {
-          "keyword" : {
-            "type" : "keyword",
-            "ignore_above" : 256
-          }
-        }
+        "type" : "integer"
       },
       "shippingCost" : {
         "type" : "float"

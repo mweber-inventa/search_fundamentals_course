@@ -131,14 +131,14 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "salesRankShortTerm",
-                            "factor": 1.5,
+                            "factor": 1.2,
                             "modifier": "reciprocal",
                             "missing": 100000000
                         }
                     },
                     {
                         "field_value_factor": {
-                            "field": "salesRankMidTerm",
+                            "field": "salesRankMediumTerm",
                             "factor": 1.5,
                             "modifier": "reciprocal",
                             "missing": 100000000
@@ -147,7 +147,15 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     {
                         "field_value_factor": {
                             "field": "salesRankLongTerm",
-                            "factor": 1.5,
+                            "factor": 1,
+                            "modifier": "reciprocal",
+                            "missing": 100000000
+                        }
+                    },
+                    {
+                        "field_value_factor": {
+                            "field": "bestSellingRank",
+                            "factor": 3,
                             "modifier": "reciprocal",
                             "missing": 100000000
                         }
