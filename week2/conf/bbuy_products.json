@@ -26,10 +26,12 @@
       },
       "filter": {
         "smarter_hyphens_filter": {
-          "TODO": "DEFINE ME"
+          "type": "word_delimiter_graph",
+          "catenate_all": true
         },
         "shingle": {
-            "TODO": "DEFINE ME"
+          "min_shingle_size": 2,
+          "max_shingle_size": 3
           }
       }
     }
