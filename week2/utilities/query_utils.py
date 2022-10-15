@@ -1,4 +1,6 @@
 import math
+import pandas as pd
+
 # some helpful tools for dealing with queries
 def create_stats_query(aggs, extended=True):
     print("Creating stats query from %s" % aggs)
@@ -159,16 +161,27 @@ def create_query(user_query, filters, sort="_score", sortDir="desc", size=10, in
 # Give a user query from the UI and the query object we've built so far, adding in spelling suggestions
 def add_spelling_suggestions(query_obj, user_query):
     #### W2, L2, S1
-    print("TODO: IMPLEMENT ME")
-    #query_obj["suggest"] = {
-    #    "text": user_query,
-    #    "phrase_suggest": {
-
-    #    },
-    #    "term_suggest": {
-
-    #    }
-    #}
+    query_obj["suggest"] = {
+       "text": user_query,
+       "phrase_suggest": {
+            "field": "suggest.trigram",
+            "min_word_length": 2,
+            "direct_generator": [ {
+                "field": "title.trigram",
+                "suggest_mode": "popular",
+                "min_word_length": 2,
+                "highlight": {
+                    "pre_tag": "<em>",
+                    "post_tag": "</em>"
+                }
+            } ]
+       },
+       "term_suggest": {
+            "suggest_mode": "popular",
+            "min_word_length": 3,
+            "field": "suggest.text"
+       }
+    }
 
 
 # Given the user query from the UI, the query object we've built so far and a Pandas data GroupBy data frame,
@@ -200,12 +213,13 @@ def add_click_priors(query_obj, user_query, priors_gb):
                         "term": {
                             "sku": {
                                 "value": str(row['sku']),
-                                "boost": row['freq']/total
+                                "boost": row['freq']#/total
                             }
                         }
                     }
-                if click_prior_query_obj is not None:
-                    query_obj["query"]["function_score"]["query"]["bool"]["should"].append(click_prior_query_obj)
+                    if click_prior_query_obj is not None:
+                        query_obj["query"]["function_score"]["query"]["bool"]["should"].append(click_prior_query_obj)
+                
     except KeyError as ke:
         print(ke)
         print(f"Can't process user_query: {user_query} for click priors")
