@@ -164,22 +164,30 @@ def add_spelling_suggestions(query_obj, user_query):
     query_obj["suggest"] = {
        "text": user_query,
        "phrase_suggest": {
-            "field": "suggest.trigram",
-            "min_word_length": 2,
-            "direct_generator": [ {
-                "field": "title.trigram",
-                "suggest_mode": "popular",
-                "min_word_length": 2,
+            "phrase":{
+                "field": "suggest.trigrams",
+                "direct_generator": [ {
+                    "field": "suggest.trigrams",
+                    "suggest_mode": "popular",
+                    "min_word_length": 2
+                } ],
                 "highlight": {
                     "pre_tag": "<em>",
                     "post_tag": "</em>"
                 }
-            } ]
+            }
        },
        "term_suggest": {
-            "suggest_mode": "popular",
-            "min_word_length": 3,
-            "field": "suggest.text"
+            "term":{
+                "suggest_mode": "popular",
+                "min_word_length": 3,
+                "field": "suggest.text"
+            }
+       },
+       "autocomplete": {
+            "completion": {
+                "field": "suggest"
+            }
        }
     }
 
@@ -213,7 +221,7 @@ def add_click_priors(query_obj, user_query, priors_gb):
                         "term": {
                             "sku": {
                                 "value": str(row['sku']),
-                                "boost": row['freq']#/total
+                                "boost": row['freq']/total
                             }
                         }
                     }
