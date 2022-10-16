@@ -207,26 +207,39 @@ def add_click_priors(query_obj, user_query, priors_gb):
             a = priors_gb['sku'].apply(list).reset_index()
             b  = pd.Series([item for sublist in a[a['query'] == user_query].sku for item in sublist])
             skus = b.value_counts().sort_index().rename_axis('sku').reset_index(name='freq')
-            click_prior = ','.join([str(row['sku']) for n, row in skus.iterrows()])
             
             total_df = priors_gb.agg(total_querys = ('query', 'count')).reset_index()
             total = total_df[total_df['query'] == user_query]['total_querys'].values[0]
+
+            click_prior = ' '.join([str(row['sku']) + '^' + str(row['freq']) for n, row in skus.iterrows()])
 
             if click_prior != "":
                 click_prior_query_obj = None # Implement a query object that matches on the ID or SKU with weights of
                 # This may feel like cheating, but it's really not, esp. in ecommerce where you have all this prior data,
 
-                for n, row in skus.iterrows():
-                    click_prior_query_obj = {
-                        "term": {
-                            "sku": {
-                                "value": str(row['sku']),
-                                "boost": row['freq']/total
-                            }
-                        }
-                    }
-                    if click_prior_query_obj is not None:
-                        query_obj["query"]["function_score"]["query"]["bool"]["should"].append(click_prior_query_obj)
+                click_prior_query_obj = {
+                    "query_string": {
+                        "query": click_prior,
+                        "fields": ["sku"],
+                        "boost": 100
+                     }
+                 }
+
+                if click_prior_query_obj is not None:
+                    query_obj["query"]["function_score"]["query"]["bool"]["should"].append(click_prior_query_obj)
+                
+                # First tried appending a term query for each sku, but its not the best approach.
+                #for n, row in skus.iterrows():
+                #    click_prior_query_obj = {
+                #        "term": {
+                #            "sku": {
+                #                "value": str(row['sku']),
+                #                "boost": row['freq']/total
+                #            }
+                #        }
+                #    }
+                #    if click_prior_query_obj is not None:
+                #        query_obj["query"]["function_score"]["query"]["bool"]["should"].append(click_prior_query_obj)
                 
     except KeyError as ke:
         print(ke)
